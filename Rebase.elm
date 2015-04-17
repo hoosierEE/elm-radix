@@ -1,15 +1,32 @@
-module Rebase (decFromHex) where
+module Rebase (Base,intFromBase) where
 import String as S
+import List as L
 
-charset_hex = "0123456789ABCDEF0123456789abcdef"
--- base58_bitcoin = toList "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghipqrstuvwxyz"
--- base58_ripple = toList "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65Fqi1tuvAxyz"
--- base58_flickr = toList "123456789abcdefghipqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ"
+type alias Base = { base: Int, string: String }
 
-decFromHex hexString =
+intFromBase : Base -> String -> Int
+intFromBase base val =
     let
-        ss = List.reverse <| S.toList hexString
-        vals = List.filterMap (List.head << flip S.indexes charset_hex << S.fromChar) ss
-        pwrd = List.indexedMap (\x v -> (16^x)*(v%16)) vals
-    in List.foldr (+) 0 pwrd
+        bb = base.base
+        bs = base.string
+        cs = L.reverse <| S.toList val
+        match = L.head << flip S.indexes bs << S.fromChar
+        xs = L.filterMap match cs
+        pwrd = L.indexedMap (\x v -> (bb ^ x) * (v % bb)) xs
+    in
+       L.foldr (+) 0 pwrd
+
+-- stringFromBase : Base -> Int -> String
+
+-- example bases
+hex     = { base = 16, string = "0123456789ABCDEF0123456789abcdef" }
+bitcoin = { base = 58, string = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghipqrstuvwxyz" }
+ripple  = { base = 58, string = "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65Fqi1tuvAxyz" }
+flickr  = { base = 58, string = "123456789abcdefghipqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ" }
+
+-- specialize intFromBase to use these particular examples:
+stringFromBitcoin str = intFromBase bitcoin str
+stringFromFlickr str  = intFromBase flickr str
+stringFromHex str     = intFromBase hex str
+stringFromRipple str  = intFromBase ripple str
 
