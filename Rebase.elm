@@ -1,4 +1,14 @@
-module Rebase (Base,intFromBase) where
+module Rebase (Base, intFromBase) where
+
+{-| Convert between different textual representations of numbers.
+
+# Conversions
+@docs intFromBase,stringFromBase
+
+# Common specializations
+@docs intFromBin,intFromHex,intFromOct,intFromDec
+
+-}
 
 import String as S
 import List as L
@@ -35,17 +45,17 @@ hex = { base = 16, string = "0123456789ABCDEF0123456789abcdef" }
 oct = { base =  8, string = "01234567" }
 dec = { base = 10, string = "0123456789" }
 
-bitcoin = { base = 58, string = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghipqrstuvwxyz" }
-flickr  = { base = 58, string = "123456789abcdefghipqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ" }
-ripple  = { base = 58, string = "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65Fqi1tuvAxyz" }
+bitcoin = { base = 58, string = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz" }
+ripple  = { base = 58, string = "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz" }
+flickr  = { base = 58, string = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ" }
 
 -- specialize intFromBase to use these particular examples:
-stringFromBin str = intFromBase bin str
-stringFromHex str = intFromBase hex str
-stringFromOct str = intFromBase oct str
-stringFromDec str = intFromBase dec str
+intFromBin str = intFromBase bin str
+intFromHex str = intFromBase hex str
+intFromOct str = intFromBase oct str
+intFromDec str = intFromBase dec str
 
-stringFromBitcoin str = intFromBase bitcoin str
-stringFromFlickr str  = intFromBase flickr str
-stringFromRipple str  = intFromBase ripple str
+intFromBitcoin str = intFromBase bitcoin str
+intFromFlickr str  = intFromBase flickr str
+intFromRipple str  = intFromBase ripple str
 
