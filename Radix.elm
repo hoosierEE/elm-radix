@@ -1,4 +1,4 @@
-module Rebase (Base, intFromBase) where
+module Radix (Base, intFromBase) where
 
 {-| Convert between different textual representations of numbers.
 
@@ -14,14 +14,14 @@ import String as S
 import List as L
 
 
-type alias Base = { base: Int, string: String }
+type alias Base = { base: Int, alphabet: String }
 
 
 intFromBase : Base -> String -> Int
 intFromBase base value =
     let
         bb = base.base
-        bs = base.string
+        bs = base.alphabet
         cs = L.reverse <| S.toList value
         match = L.head << flip S.indexes bs << S.fromChar
         xs = L.filterMap match cs
@@ -34,20 +34,20 @@ stringFromBase : Base -> Int -> String
 stringFromBase base value =
     let
         bb = base.base
-        bs = base.string
+        bs = base.alphabet
     in
        "fixme"
 
 
 -- example bases
-bin = { base =  2, string = "01" }
-hex = { base = 16, string = "0123456789ABCDEF0123456789abcdef" }
-oct = { base =  8, string = "01234567" }
-dec = { base = 10, string = "0123456789" }
+bin = { base =  2, alphabet = "01" }
+hex = { base = 16, alphabet = "0123456789ABCDEF0123456789abcdef" }
+oct = { base =  8, alphabet = "01234567" }
+dec = { base = 10, alphabet = "0123456789" }
 
-bitcoin = { base = 58, string = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz" }
-ripple  = { base = 58, string = "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz" }
-flickr  = { base = 58, string = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ" }
+bitcoin = { base = 58, alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz" }
+ripple  = { base = 58, alphabet = "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz" }
+flickr  = { base = 58, alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ" }
 
 -- specialize intFromBase to use these particular examples:
 intFromBin str = intFromBase bin str
