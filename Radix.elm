@@ -1,61 +1,38 @@
-module Radix (Base, intFromBase) where
+module Radix (uBase) where
 
 {-| Convert between different textual representations of numbers.
 
 # Conversions
-@docs intFromBase,stringFromBase
-
-# Common specializations
-@docs intFromBin,intFromHex,intFromOct,intFromDec
+@docs uBase,base
 
 -}
 
-import String as S
 import List as L
+import Result as R
+import String as S
 
-
-type alias Base = { base: Int, alphabet: String }
-
-
-intFromBase : Base -> String -> Int
-intFromBase base value =
+{-| "Unsafe" base conversion.
+Turn any string into a base n integer, suppressing errors with potentially surprising results.
+    uBase 16 "100" -- 256
+    uBase 16 "1ff" -- 256
+-}
+uBase : Int -> String -> Int
+uBase n str =
     let
-        bb = base.base
-        bs = base.alphabet
-        cs = L.reverse <| S.toList value
-        match = L.head << flip S.indexes bs << S.fromChar
-        xs = L.filterMap match cs
-        pwrd = L.indexedMap (\x v -> (bb ^ x) * (v % bb)) xs
+        len = S.length str
+        chars = L.filterMap (R.toMaybe << S.toInt << toString) <| S.toList str
+        weights = L.indexedMap (\x v -> (n ^ (len - x)) * v) chars
     in
-       L.foldr (+) 0 pwrd
+       L.foldr (+) 0 weights
 
+-- Common alphabets
+hex = "0123456789abcdef"
+dec = "0123456789"
+oct = "01234567"
+bin = "01"
 
-stringFromBase : Base -> Int -> String
-stringFromBase base value =
-    let
-        bb = base.base
-        bs = base.alphabet
-    in
-       "fixme"
-
-
--- example bases
-bin = { base =  2, alphabet = "01" }
-hex = { base = 16, alphabet = "0123456789ABCDEF0123456789abcdef" }
-oct = { base =  8, alphabet = "01234567" }
-dec = { base = 10, alphabet = "0123456789" }
-
-bitcoin = { base = 58, alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz" }
-ripple  = { base = 58, alphabet = "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz" }
-flickr  = { base = 58, alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ" }
-
--- specialize intFromBase to use these particular examples:
-intFromBin str = intFromBase bin str
-intFromHex str = intFromBase hex str
-intFromOct str = intFromBase oct str
-intFromDec str = intFromBase dec str
-
-intFromBitcoin str = intFromBase bitcoin str
-intFromFlickr str  = intFromBase flickr str
-intFromRipple str  = intFromBase ripple str
+-- some interesting Base-58 alphabets
+-- bitcoin = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+-- ripple  = "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz"
+-- flickr  = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ"
 
