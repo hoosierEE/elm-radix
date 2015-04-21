@@ -1,9 +1,14 @@
-module Radix (uBase) where
+module Radix (base,uBase) where
 
-{-| Convert between different textual representations of numbers.
+{-| Convert among textual representations of numbers.
+Sometimes it's useful to represent a number using a different base or radix.  In computer sciencce,
+This is often used for converting numbers among decimal, binary, and hexidecimal formats.
 
 # Conversions
 @docs uBase,base
+
+# Convenience functions
+@docs hex,dec,oct,bin
 
 -}
 
@@ -11,8 +16,8 @@ import List as L
 import Result as R
 import String as S
 
-{-| "Unsafe" base conversion.
-Turn any string into a base n integer, suppressing errors with potentially surprising results.
+{-| "Unsafe" Base Conversion
+Convert a string to a base n integer, suppressing errors. Potentially surprising results!
     uBase 16 "100" -- 256
     uBase 16 "1ff" -- 256
 -}
@@ -25,11 +30,19 @@ uBase n str =
     in
        L.foldr (+) 0 weights
 
+{-| Generic Conversion
+Convert the given string `str` to an integer based on its characters' positions in the alphabet `alph`
+    base "012" "111" -- Ok 13
+-}
+base : String -> String -> Int
+base alph str = -- TODO
+    1
+
 -- Common alphabets
-hex = "0123456789abcdef"
-dec = "0123456789"
-oct = "01234567"
-bin = "01"
+aHex = "0123456789abcdef"
+aDec = "0123456789"
+aOct = "01234567"
+aBin = "01"
 
 -- some interesting Base-58 alphabets
 -- bitcoin = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
