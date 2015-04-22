@@ -24,7 +24,7 @@ import String as S
 {-| "Unsafe" Conversion
 Convert a string to a base n integer, suppressing errors. Potentially disastrous results; use with caution!
     uBase 16 "100" -- 256
-    uBase 16 "1ff" -- 1
+    uBase 16 "1ff" -- 1 (probably not what was intended)
 -}
 uBase : Int -> String -> Int
 uBase n str =
@@ -44,26 +44,46 @@ base : String -> String -> Int
 base alph str = -- TODO
     1
 
-
--- CONVENIENCE FUNCTIONS --
-
--- Commonly used alphabets.
-{-| Convert a hexadecimal-formatted string into an Elm Int -}
-hex str = base "0123456789abcdef" str
-{-| Convert a decimal-formatted string into an Elm Int.
-Since Elm Ints are decimal-formatted already, this is mainly useful as a sanity check
+{-| Convert a hexadecimal-formatted string into an Elm Int.  Common usage: conversing with computers.
+    hex str = base "0123456789abcdef" str
 -}
+hex : String -> Int
+hex str = base "0123456789abcdef" str
+
+{-| Convert a decimal-formatted string into an Elm Int.
+Since Elm Ints are decimal-formatted already, this is equivalent to "toString" for positive numbers.
+    dec str = base "0123456789" str
+-}
+dec : String -> Int
 dec str = base "0123456789" str
-{-| Convert an octal-formatted string into an Elm Int -}
+
+{-| Convert an octal-formatted string into an Elm Int.  Common usage: UNIX-style file permissions
+    oct str = base "01234567" str
+-}
+oct : String -> Int
 oct str = base "01234567" str
-{-| Convert a binary-formatted string into an Elm Int -}
+
+{-| Convert a binary-formatted string into an Elm Int.  Common usage: Computers (internally)
+    bin str = base "01" str
+-}
+bin : String -> Int
 bin str = base "01" str
 
--- Interesting Base-58 alphabets
-{-| Convert a bitcoin-formatted string into an Elm Int -}
+{-| Convert a Bitcoin-formatted string into an Elm Int.  Common usage: Bitcoin mining
+    bitcoin str = base "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz" str
+-}
+bitcoin : String -> Int
 bitcoin str = base "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz" str
-{-| Convert a ripple-formatted string into an Elm Int -}
-ripple  str = base "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz" str
-{-| Convert a flickr-formatted string into an Elm Int -}
-flickr  str = base "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ" str
+
+{-| Convert a ripple-formatted string into an Elm Int
+    ripple str = base "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz" str
+-}
+ripple : String -> Int
+ripple str = base "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz" str
+
+{-| Convert a flickr-formatted string into an Elm Int.  Common usage: decoding or encoding Flickr URLs
+    flickr str = base "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ" str
+-}
+flickr : String -> Int
+flickr str = base "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ" str
 
