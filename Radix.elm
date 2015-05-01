@@ -39,13 +39,14 @@ Given an alphabet `a` and a string `s`, convert `s` to a number determined by `a
     base "0123456789abcdef" "ff" -- Ok 255
     base "012" "111" -- Ok 13
 -}
-base : String -> String -> Result String Int
+--base : String -> String -> Result String Int
 base alph str =
     let
         chars = L.map (toInt << fromChar) <| toList str
         len = length str
         --weights = L.indexedMap (\x v -> (n ^ (len - 1 - x)) * v) chars
     in
+       "hi"
        --L.foldr (+) 0 weights
 
 -- {-| Convert a hexadecimal-formatted string into an Elm Int.  Common usage: conversing with computers.
